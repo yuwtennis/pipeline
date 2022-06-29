@@ -1,41 +1,8 @@
 package entities
 
 import (
-	"github.com/mitchellh/mapstructure"
-	"realestatetrans/internal"
+	"strconv"
 )
-
-var HeaderToKeys = map[string]string{
-	"種類":         "Type",
-	"地域":         "LandType",
-	"市区町村コード":    "CityId",
-	"都道府県名":      "PrefectureName",
-	"市区町村名":      "DistrictName",
-	"地区名":        "CityName",
-	"最寄駅：名称":     "ClosestStationName",
-	"最寄駅：距離（分）":  "DurationToClosestStationInMin",
-	"取引価格（総額）":   "ClosedPrice",
-	"坪単価":        "UnitPriceOfFloorspace",
-	"間取り":        "FloorPlan",
-	"面積（㎡）":      "AreaInSquareMeter",
-	"取引価格（㎡単価）":  "UnitPriceOfSquareMeter",
-	"土地の形状":      "ShapeOfLand",
-	"間口":         "FacadeInMeters",
-	"延床面積（％）":    "AreaRatio",
-	"建築年":        "YearBuilt",
-	"建物の構造":      "ArchitectureType",
-	"用途":         "Purpose",
-	"今後の利用目的":    "FuturePurpose",
-	"前面道路：方位":    "FrontRoadDirection",
-	"前面道路：種類":    "FrontRoadType",
-	"前面道路：幅員（ｍ）": "FrontRoadWithInMeters",
-	"都市計画":       "CityPlan",
-	"建ぺい率（％）":    "BuildingToLandRatio",
-	"容積率（％）":     "FloorToLandRatio",
-	"取引時点":       "AgreementDate",
-	"改装":         "RefurbishmentState",
-	"取引の事情等":     "AgreementNote",
-}
 
 type RealEstate struct {
 	// Id
@@ -101,15 +68,38 @@ type RealEstate struct {
 }
 
 func NewRealEstate(m map[string]string) *RealEstate {
-	m2 := make(map[string]interface{})
 	r := new(RealEstate)
 
-	for k, v := range m {
-		m2[HeaderToKeys[k]] = v
-	}
-
-	err := mapstructure.Decode(m2, &r)
-	internal.Check(err)
+	r.Id = m["Id"]
+	r.Type = m["Type"]
+	r.LandType = m["LandType"]
+	r.CityId = m["CityId"]
+	r.PrefectureName = m["PrefectureName"]
+	r.DistrictName = m["DistrictName"]
+	r.CityName = m["CityName"]
+	r.ClosestStationName = m["ClosestStationName"]
+	r.DurationToClosestStationInMin = m["DurationToClosestStationInMin"]
+	r.ClosedPrice, _ = strconv.Atoi(m["ClosedPrice"])
+	r.UnitPriceOfFloorspace, _ = strconv.Atoi(m["UnitPriceOfFloorspace"])
+	r.FloorPlan = m["FloorPlan"]
+	r.AreaInSquareMeter, _ = strconv.Atoi(m["AreaInSquareMeter"])
+	r.UnitPriceOfSquareMeter, _ = strconv.Atoi(m["UnitPriceOfSquareMeter"])
+	r.ShapeOfLand = m["ShapeOfLand"]
+	r.FacadeInMeters, _ = strconv.Atoi(m["FacadeInMeters"])
+	r.AreaRatio, _ = strconv.Atoi(m["AreaRatio"])
+	r.YearBuilt = m["YearBuilt"]
+	r.ArchitectureType = m["ArchitectureType"]
+	r.Purpose = m["Purpose"]
+	r.FuturePurpose = m["FuturePurpose"]
+	r.FrontRoadDirection = m["FrontRoadDirection"]
+	r.FrontRoadType = m["FrontRoadType"]
+	r.FrontRoadWithInMeters, _ = strconv.ParseFloat(m["FrontRoadWithInMeters"], 64)
+	r.CityPlan = m["CityPlan"]
+	r.BuildingToLandRatio, _ = strconv.Atoi(m["BuildingToLandRatio"])
+	r.FloorToLandRatio, _ = strconv.Atoi(m["FloorToLandRatio"])
+	r.AgreementDate = m["AgreementDate"]
+	r.RefurbishmentState = m["RefurbishmentState"]
+	r.AgreementNote = m["AgreementNote"]
 
 	return r
 }

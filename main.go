@@ -1,6 +1,8 @@
 package main
 
-import "realestates/internal"
+import (
+	"realestatetrans/internal"
+)
 
 func main() {
 	internal.Run()

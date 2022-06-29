@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/apache/beam/sdks/v2 v2.39.0
 	github.com/mitchellh/mapstructure v1.4.3
+	github.com/recursionpharma/go-csv-map v0.0.0-20160524001940-792523c65ae9
 	golang.org/x/text v0.3.7
 )
 
