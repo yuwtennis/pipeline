@@ -1,7 +1,7 @@
 package main
 
 import (
-	"realestatetrans/internal"
+	"pipelines/internal"
 )
 
 func main() {

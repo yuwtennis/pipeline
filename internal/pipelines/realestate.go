@@ -1,40 +1,21 @@
-package pipeline
+package pipelines
 
 import (
 	"bytes"
 	"context"
-	"fmt"
 	"github.com/apache/beam/sdks/v2/go/pkg/beam"
 	"github.com/apache/beam/sdks/v2/go/pkg/beam/x/beamx"
 	csvmap "github.com/recursionpharma/go-csv-map"
-	"realestatetrans/internal"
-	"realestatetrans/internal/entities"
-	"regexp"
+	"pipelines/internal"
+	"pipelines/internal/elements"
 	"strings"
 )
 
-func strToDateFn(event *entities.RealEstate) *entities.RealEstate {
-	regex := regexp.MustCompile(`(\d+)第(.)半期`)
-	res := regex.FindAllStringSubmatch(event.AgreementDate, -1)
-	year := res[0][1]
-	quarter := res[0][2]
+type RealEstate struct{}
 
-	switch quarter {
-	case "１":
-		event.AgreementDate = fmt.Sprintf("%s-%s-1", year, "4")
-	case "２":
-		event.AgreementDate = fmt.Sprintf("%s-%s-1", year, "7")
-	case "３":
-		event.AgreementDate = fmt.Sprintf("%s-%s-1", year, "10")
-	case "４":
-		event.AgreementDate = fmt.Sprintf("%s-%s-1", year, "1")
-	}
-
-	return event
-}
-
-func toRealEstateFn(event string) *entities.RealEstate {
-	keys := []string{"Type",
+func (re *RealEstate) toRealEstateFn(event string) *elements.RealEstate {
+	keys := []string{
+		"Type",
 		"LandType",
 		"CityId",
 		"PrefectureName",
@@ -70,15 +51,15 @@ func toRealEstateFn(event string) *entities.RealEstate {
 	record, err := reader.ReadAll()
 	internal.Check(err)
 
-	return entities.NewRealEstate(record[0])
+	return elements.NewRealEstate(record[0])
 }
 
-func Run(events []string) {
+func (re *RealEstate) Process(elements []string) {
 	beam.Init()
 
 	p := beam.NewPipeline()
 	s := p.Root()
-	beam.Create(s, events)
+	beam.Create(s, elements)
 
 	// TODO To RealEstate
 	// TODO 建築年 & 取引時点 to time object

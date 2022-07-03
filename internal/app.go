@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"pipelines/internal/clients"
 )
 
 // Run is the orchestrator of this application
@@ -20,7 +21,7 @@ func Run() {
 		"20204", "20214")
 
 	// TODO Use channel
-	contents := DlContent(requestUrl, requestHeader)
+	contents := clients.Download(requestUrl, requestHeader)
 
 	os.WriteFile(downloadedFile, contents, 0644)
 	read, err := zip.OpenReader(downloadedFile)

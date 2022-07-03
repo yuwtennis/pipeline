@@ -1,12 +1,10 @@
-package entities
+package elements
 
 import (
 	"strconv"
 )
 
 type RealEstate struct {
-	// Id
-	Id string
 	// 種類
 	Type string
 	// 地域
@@ -70,7 +68,6 @@ type RealEstate struct {
 func NewRealEstate(m map[string]string) *RealEstate {
 	r := new(RealEstate)
 
-	r.Id = m["Id"]
 	r.Type = m["Type"]
 	r.LandType = m["LandType"]
 	r.CityId = m["CityId"]

@@ -1,19 +1,20 @@
-package internal
+package clients
 
 import (
 	"io"
 	"net/http"
+	"pipelines/internal"
 )
 
-// DlContent Download contents from specified url
-func DlContent(requestUrl string, header map[string]string) []byte {
+// Download Download contents from specified url
+func Download(requestUrl string, header map[string]string) []byte {
 	client := &http.Client{}
 	req, err := http.NewRequest(
 		"GET",
 		requestUrl,
 		nil,
 	)
-	Check(err)
+	internal.Check(err)
 
 	if len(header) > 0 {
 		for k, v := range header {
@@ -22,11 +23,11 @@ func DlContent(requestUrl string, header map[string]string) []byte {
 	}
 
 	resp, err := client.Do(req)
-	Check(err)
+	internal.Check(err)
 	defer resp.Body.Close()
 
 	contents, err := io.ReadAll(resp.Body)
-	Check(err)
+	internal.Check(err)
 
 	return contents
 }
