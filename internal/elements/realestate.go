@@ -34,7 +34,7 @@ type RealEstate struct {
 	// 土地の形状
 	ShapeOfLand string
 	// 間口
-	FacadeInMeters int
+	FacadeInMeters float64
 	// 延床面積（％）
 	AreaRatio int
 	// 建築年
@@ -82,7 +82,7 @@ func NewRealEstate(m map[string]string) *RealEstate {
 	r.AreaInSquareMeter, _ = strconv.Atoi(m["AreaInSquareMeter"])
 	r.UnitPriceOfSquareMeter, _ = strconv.Atoi(m["UnitPriceOfSquareMeter"])
 	r.ShapeOfLand = m["ShapeOfLand"]
-	r.FacadeInMeters, _ = strconv.Atoi(m["FacadeInMeters"])
+	r.FacadeInMeters, _ = strconv.ParseFloat(m["FacadeInMeters"], 64)
 	r.AreaRatio, _ = strconv.Atoi(m["AreaRatio"])
 	r.YearBuilt = m["YearBuilt"]
 	r.ArchitectureType = m["ArchitectureType"]
