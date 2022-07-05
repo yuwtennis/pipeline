@@ -3,7 +3,7 @@ package clients
 import (
 	"io"
 	"net/http"
-	"pipelines/internal"
+	"pipelines/internal/helpers"
 )
 
 // Download Download contents from specified url
@@ -14,7 +14,7 @@ func Download(requestUrl string, header map[string]string) []byte {
 		requestUrl,
 		nil,
 	)
-	internal.Check(err)
+	helpers.Check(err)
 
 	if len(header) > 0 {
 		for k, v := range header {
@@ -23,11 +23,11 @@ func Download(requestUrl string, header map[string]string) []byte {
 	}
 
 	resp, err := client.Do(req)
-	internal.Check(err)
+	helpers.Check(err)
 	defer resp.Body.Close()
 
 	contents, err := io.ReadAll(resp.Body)
-	internal.Check(err)
+	helpers.Check(err)
 
 	return contents
 }

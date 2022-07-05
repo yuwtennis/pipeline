@@ -7,36 +7,51 @@ import (
 	"log"
 	"os"
 	"pipelines/internal/clients"
+	"pipelines/internal/helpers"
 )
 
 // Run is the orchestrator of this application
 func Run() {
-	downloadedFile := "/tmp/file.zip"
 	var decodedSlice []string
 
+	downloadedFile := "/tmp/file.zip"
+	from := "20204"
+	to := "20214"
+	prefecture := "13"
+	city := "13999"
+
 	requestUrl := fmt.Sprintf(
-		"https://www.land.mlit.go.jp/webland/servlet/DownloadServlet?DLF=true&TTC-From=%s&TTC-To=%s&TDK=13&SKC=13115", "20204", "20214")
+		"https://www.land.mlit.go.jp/webland/servlet/DownloadServlet?DLF=true&TTC-From=%s&TTC-To=%s&TDK=%s&SKC=%s",
+		from,
+		to,
+		prefecture,
+		city)
+
 	requestHeader := make(map[string]string)
-	requestHeader["referer"] = fmt.Sprintf("https://www.land.mlit.go.jp/webland/servlet/DownloadServlet?TDK=13&SKC=13115&TDIDFrom=%s&TDIDTo=%s",
-		"20204", "20214")
+	requestHeader["referer"] = fmt.Sprintf(
+		"https://www.land.mlit.go.jp/webland/servlet/DownloadServlet?TDK=%s&SKC=%s&TDIDFrom=%s&TDIDTo=%s",
+		prefecture,
+		city,
+		from,
+		to)
 
 	// TODO Use channel
 	contents := clients.Download(requestUrl, requestHeader)
 
 	os.WriteFile(downloadedFile, contents, 0644)
 	read, err := zip.OpenReader(downloadedFile)
-	Check(err)
+	helpers.Check(err)
 
 	for _, file := range read.File {
 		rawFile, err := file.Open()
 		lines, err := io.ReadAll(rawFile)
-		Check(err)
+		helpers.Check(err)
 
-		decodedString := string(ShiftJisToUTF8(lines))
+		decodedString := string(helpers.ShiftJisToUTF8(lines))
 		decodedSlice = append(decodedSlice, decodedString)
 		log.Println(decodedString)
 	}
 
 	err = os.Remove(downloadedFile)
-	Check(err)
+	helpers.Check(err)
 }

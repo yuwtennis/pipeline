@@ -6,8 +6,9 @@ import (
 	"github.com/apache/beam/sdks/v2/go/pkg/beam"
 	"github.com/apache/beam/sdks/v2/go/pkg/beam/x/beamx"
 	csvmap "github.com/recursionpharma/go-csv-map"
-	"pipelines/internal"
 	"pipelines/internal/elements"
+	"pipelines/internal/helpers"
+	"pipelines/internal/runners/direct"
 	"strings"
 )
 
@@ -49,22 +50,27 @@ func (re *RealEstate) toRealEstateFn(event string) *elements.RealEstate {
 	buf := bytes.NewBufferString(strings.Join(keys, ",") + "\n" + event)
 	reader := csvmap.NewReader(buf)
 	record, err := reader.ReadAll()
-	internal.Check(err)
+	helpers.Check(err)
 
 	return elements.NewRealEstate(record[0])
 }
 
+func (re *RealEstate) toTimestamp(e *elements.RealEstate) *elements.RealEstate {
+	e.YearBuilt = "NEW_DATE"
+	e.AgreementDate = "NEW_DATE"
+
+	return e
+}
+
 func (re *RealEstate) Process(elements []string) {
-	beam.Init()
+	d := direct.Direct{}
 
-	p := beam.NewPipeline()
-	s := p.Root()
-	beam.Create(s, elements)
-
-	// TODO To RealEstate
-	// TODO 建築年 & 取引時点 to time object
+	p, s := d.Init()
+	lines := beam.Create(s, elements)
+	entities := beam.ParDo(s, re.toRealEstateFn, lines)
+	entities = beam.ParDo(s, re.toTimestamp, entities)
 
 	err := beamx.Run(context.Background(), p)
 
-	internal.Check(err)
+	helpers.Check(err)
 }

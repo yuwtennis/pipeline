@@ -1,4 +1,4 @@
-package internal
+package helpers
 
 func Check(e error) {
 	if e != nil {

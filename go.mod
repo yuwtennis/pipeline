@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/apache/beam/sdks/v2 v2.39.0
+	github.com/elastic/go-elasticsearch/v8 v8.3.0
 	github.com/recursionpharma/go-csv-map v0.0.0-20160524001940-792523c65ae9
 	github.com/stretchr/testify v1.7.0
 	golang.org/x/text v0.3.7
@@ -15,6 +16,7 @@ require (
 	cloud.google.com/go/iam v0.2.0 // indirect
 	cloud.google.com/go/storage v1.21.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/elastic/elastic-transport-go/v8 v8.0.0-20211216131617-bbee439d559c // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-cmp v0.5.7 // indirect
