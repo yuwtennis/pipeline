@@ -8,13 +8,14 @@ import (
 	csvmap "github.com/recursionpharma/go-csv-map"
 	"pipelines/internal/elements"
 	"pipelines/internal/helpers"
+	beam2 "pipelines/internal/helpers/beam"
 	"pipelines/internal/runners/direct"
 	"strings"
 )
 
 type RealEstate struct{}
 
-func (re *RealEstate) toRealEstateFn(event string) *elements.RealEstate {
+func toRealEstateFn(event string) *elements.RealEstate {
 	keys := []string{
 		"Type",
 		"LandType",
@@ -52,10 +53,16 @@ func (re *RealEstate) toRealEstateFn(event string) *elements.RealEstate {
 	record, err := reader.ReadAll()
 	helpers.Check(err)
 
-	return elements.NewRealEstate(record[0])
+	return elements.New(record[0])
 }
 
-func (re *RealEstate) toTimestamp(e *elements.RealEstate) *elements.RealEstate {
+func init() {
+	beam.RegisterFunction(toTimestamp)
+	beam.RegisterFunction(toRealEstateFn)
+	beam.RegisterFunction(beam2.ToElasticsearchFn)
+}
+
+func toTimestamp(e *elements.RealEstate) *elements.RealEstate {
 	e.YearBuilt = "NEW_DATE"
 	e.AgreementDate = "NEW_DATE"
 
@@ -67,8 +74,9 @@ func (re *RealEstate) Process(elements []string) {
 
 	p, s := d.Init()
 	lines := beam.Create(s, elements)
-	entities := beam.ParDo(s, re.toRealEstateFn, lines)
-	entities = beam.ParDo(s, re.toTimestamp, entities)
+	entities := beam.ParDo(s, toRealEstateFn, lines)
+	entities = beam.ParDo(s, toTimestamp, entities)
+	beam.ParDo(s, beam2.ToElasticsearchFn, entities)
 
 	err := beamx.Run(context.Background(), p)
 

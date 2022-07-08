@@ -1,8 +1,11 @@
 package elements
 
 import (
+	"encoding/json"
 	"strconv"
 )
+
+// TODO https://beam.apache.org/documentation/programming-guide/#schemas
 
 type RealEstate struct {
 	// 種類
@@ -65,7 +68,7 @@ type RealEstate struct {
 	AgreementNote string
 }
 
-func NewRealEstate(m map[string]string) *RealEstate {
+func New(m map[string]string) *RealEstate {
 	r := new(RealEstate)
 
 	r.Type = m["Type"]
@@ -99,4 +102,11 @@ func NewRealEstate(m map[string]string) *RealEstate {
 	r.AgreementNote = m["AgreementNote"]
 
 	return r
+}
+
+func (re *RealEstate) ToByte() []byte {
+
+	data, _ := json.Marshal(*re)
+
+	return data
 }
