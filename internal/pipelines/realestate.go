@@ -15,8 +15,8 @@ import (
 
 type RealEstate struct{}
 
-func toRealEstateFn(event string) *elements.RealEstate {
-	keys := []string{
+var (
+	KEYS = []string{
 		"Type",
 		"LandType",
 		"CityId",
@@ -47,8 +47,11 @@ func toRealEstateFn(event string) *elements.RealEstate {
 		"RefurbishmentState",
 		"AgreementNote",
 	}
+)
 
-	buf := bytes.NewBufferString(strings.Join(keys, ",") + "\n" + event)
+func ToRealEstateFn(event string) *elements.RealEstate {
+
+	buf := bytes.NewBufferString(strings.Join(KEYS, ",") + "\n" + event)
 	reader := csvmap.NewReader(buf)
 	record, err := reader.ReadAll()
 	helpers.Check(err)
@@ -57,12 +60,12 @@ func toRealEstateFn(event string) *elements.RealEstate {
 }
 
 func init() {
-	beam.RegisterFunction(toTimestamp)
-	beam.RegisterFunction(toRealEstateFn)
+	beam.RegisterFunction(ToTimestamp)
+	beam.RegisterFunction(ToRealEstateFn)
 	beam.RegisterFunction(beam2.ToElasticsearchFn)
 }
 
-func toTimestamp(e *elements.RealEstate) *elements.RealEstate {
+func ToTimestamp(e *elements.RealEstate) *elements.RealEstate {
 	e.YearBuilt = "NEW_DATE"
 	e.AgreementDate = "NEW_DATE"
 
@@ -74,8 +77,8 @@ func (re *RealEstate) Process(elements []string) {
 
 	p, s := d.Init()
 	lines := beam.Create(s, elements)
-	entities := beam.ParDo(s, toRealEstateFn, lines)
-	entities = beam.ParDo(s, toTimestamp, entities)
+	entities := beam.ParDo(s, ToRealEstateFn, lines)
+	entities = beam.ParDo(s, ToTimestamp, entities)
 	beam.ParDo(s, beam2.ToElasticsearchFn, entities)
 
 	err := beamx.Run(context.Background(), p)

@@ -1,6 +1,7 @@
 package elements
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/stretchr/testify/assert"
 	"pipelines/internal/elements"
@@ -9,24 +10,8 @@ import (
 	"testing"
 )
 
-func TestType(t *testing.T) {
-
-	realEstate := elements.RealEstate{}
-	typeOfRealEstate := reflect.TypeOf(realEstate).String()
-
-	if typeOfRealEstate != "elements.RealEstate" {
-		t.Fatal("Wrong Type.")
-	}
-	fmt.Printf("Type %s", typeOfRealEstate)
-}
-
-func TestNewRealEstate(t *testing.T) {
-
-	var intResult int
-	var float64Result float64
-	valueNotEqualErr := "Two values should be the same"
-
-	expect := map[string]string{
+var (
+	data = map[string]string{
 		"Type":                          "宅地(土地)",
 		"LandType":                      "住宅地",
 		"CityId":                        "13115",
@@ -57,45 +42,77 @@ func TestNewRealEstate(t *testing.T) {
 		"RefurbishmentState":            "",
 		"AgreementNote":                 "",
 	}
+)
 
-	realEstate := elements.NewRealEstate(expect)
+func TestType(t *testing.T) {
+
+	realEstate := elements.RealEstate{}
+	typeOfRealEstate := reflect.TypeOf(realEstate).String()
+
+	if typeOfRealEstate != "elements.RealEstate" {
+		t.Fatal("Wrong Type.")
+	}
+	fmt.Printf("Type %s", typeOfRealEstate)
+}
+
+func TestNew(t *testing.T) {
+
+	var intResult int
+	var float64Result float64
+	valueNotEqualErr := "Two values should be the same"
+
+	realEstate := elements.New(data)
 	typeOfRealEstate := reflect.TypeOf(*realEstate).String()
 
 	assert.Equal(t, typeOfRealEstate, "elements.RealEstate", "Wrong Type.")
-	assert.Equal(t, expect["Type"], realEstate.Type, valueNotEqualErr)
-	assert.Equal(t, expect["LandType"], realEstate.LandType, valueNotEqualErr)
-	assert.Equal(t, expect["CityId"], realEstate.CityId, valueNotEqualErr)
-	assert.Equal(t, expect["PrefectureName"], realEstate.PrefectureName, valueNotEqualErr)
-	assert.Equal(t, expect["DistrictName"], realEstate.DistrictName, valueNotEqualErr)
-	assert.Equal(t, expect["CityName"], realEstate.CityName, valueNotEqualErr)
-	assert.Equal(t, expect["ClosestStationName"], realEstate.ClosestStationName, valueNotEqualErr)
-	assert.Equal(t, expect["DurationToClosestStationInMin"], realEstate.DurationToClosestStationInMin, valueNotEqualErr)
-	intResult, _ = strconv.Atoi(expect["ClosedPrice"])
+	assert.Equal(t, data["Type"], realEstate.Type, valueNotEqualErr)
+	assert.Equal(t, data["LandType"], realEstate.LandType, valueNotEqualErr)
+	assert.Equal(t, data["CityId"], realEstate.CityId, valueNotEqualErr)
+	assert.Equal(t, data["PrefectureName"], realEstate.PrefectureName, valueNotEqualErr)
+	assert.Equal(t, data["DistrictName"], realEstate.DistrictName, valueNotEqualErr)
+	assert.Equal(t, data["CityName"], realEstate.CityName, valueNotEqualErr)
+	assert.Equal(t, data["ClosestStationName"], realEstate.ClosestStationName, valueNotEqualErr)
+	assert.Equal(t, data["DurationToClosestStationInMin"], realEstate.DurationToClosestStationInMin, valueNotEqualErr)
+	intResult, _ = strconv.Atoi(data["ClosedPrice"])
 	assert.Equal(t, intResult, realEstate.ClosedPrice, valueNotEqualErr)
-	intResult, _ = strconv.Atoi(expect["UnitPriceOfFloorspace"])
+	intResult, _ = strconv.Atoi(data["UnitPriceOfFloorspace"])
 	assert.Equal(t, intResult, realEstate.UnitPriceOfFloorspace, valueNotEqualErr)
-	assert.Equal(t, expect["FloorPlan"], realEstate.FloorPlan, valueNotEqualErr)
-	intResult, _ = strconv.Atoi(expect["AreaInSquareMeter"])
+	assert.Equal(t, data["FloorPlan"], realEstate.FloorPlan, valueNotEqualErr)
+	intResult, _ = strconv.Atoi(data["AreaInSquareMeter"])
 	assert.Equal(t, intResult, realEstate.AreaInSquareMeter, valueNotEqualErr)
-	assert.Equal(t, expect["ShapeOfLand"], realEstate.ShapeOfLand, valueNotEqualErr)
-	float64Result, _ = strconv.ParseFloat(expect["FacadeInMeters"], 64)
+	assert.Equal(t, data["ShapeOfLand"], realEstate.ShapeOfLand, valueNotEqualErr)
+	float64Result, _ = strconv.ParseFloat(data["FacadeInMeters"], 64)
 	assert.Equal(t, float64Result, realEstate.FacadeInMeters, valueNotEqualErr)
-	intResult, _ = strconv.Atoi(expect["AreaRatio"])
+	intResult, _ = strconv.Atoi(data["AreaRatio"])
 	assert.Equal(t, intResult, realEstate.AreaRatio, valueNotEqualErr)
-	assert.Equal(t, expect["YearBuilt"], realEstate.YearBuilt, valueNotEqualErr)
-	assert.Equal(t, expect["ArchitectureType"], realEstate.ArchitectureType, valueNotEqualErr)
-	assert.Equal(t, expect["FuturePurpose"], realEstate.FuturePurpose, valueNotEqualErr)
-	assert.Equal(t, expect["FrontRoadDirection"], realEstate.FrontRoadDirection, valueNotEqualErr)
-	assert.Equal(t, expect["FrontRoadType"], realEstate.FrontRoadType, valueNotEqualErr)
-	float64Result, _ = strconv.ParseFloat(expect["FrontRoadWithInMeters"], 64)
+	assert.Equal(t, data["YearBuilt"], realEstate.YearBuilt, valueNotEqualErr)
+	assert.Equal(t, data["ArchitectureType"], realEstate.ArchitectureType, valueNotEqualErr)
+	assert.Equal(t, data["FuturePurpose"], realEstate.FuturePurpose, valueNotEqualErr)
+	assert.Equal(t, data["FrontRoadDirection"], realEstate.FrontRoadDirection, valueNotEqualErr)
+	assert.Equal(t, data["FrontRoadType"], realEstate.FrontRoadType, valueNotEqualErr)
+	float64Result, _ = strconv.ParseFloat(data["FrontRoadWithInMeters"], 64)
 	assert.Equal(t, float64Result, realEstate.FrontRoadWithInMeters, valueNotEqualErr)
-	assert.Equal(t, expect["CityPlan"], realEstate.CityPlan, valueNotEqualErr)
-	intResult, _ = strconv.Atoi(expect["BuildingToLandRatio"])
+	assert.Equal(t, data["CityPlan"], realEstate.CityPlan, valueNotEqualErr)
+	intResult, _ = strconv.Atoi(data["BuildingToLandRatio"])
 	assert.Equal(t, intResult, realEstate.BuildingToLandRatio, valueNotEqualErr)
-	intResult, _ = strconv.Atoi(expect["FloorToLandRatio"])
+	intResult, _ = strconv.Atoi(data["FloorToLandRatio"])
 	assert.Equal(t, intResult, realEstate.FloorToLandRatio, valueNotEqualErr)
-	assert.Equal(t, expect["AgreementDate"], realEstate.AgreementDate, valueNotEqualErr)
-	assert.Equal(t, expect["RefurbishmentState"], realEstate.RefurbishmentState, valueNotEqualErr)
-	assert.Equal(t, expect["AgreementNote"], realEstate.AgreementNote, valueNotEqualErr)
+	assert.Equal(t, data["AgreementDate"], realEstate.AgreementDate, valueNotEqualErr)
+	assert.Equal(t, data["RefurbishmentState"], realEstate.RefurbishmentState, valueNotEqualErr)
+	assert.Equal(t, data["AgreementNote"], realEstate.AgreementNote, valueNotEqualErr)
 
+}
+
+func TestToByte(t *testing.T) {
+	var result map[string]interface{}
+	realEstate := elements.New(data)
+
+	bytes := realEstate.ToByte()
+	err := json.Unmarshal(bytes, &result)
+
+	fmt.Println(*realEstate)
+	fmt.Printf("%+v", result)
+
+	assert.Nil(t, err)
+	assert.Equal(t, data["Type"], result["Type"])
 }
