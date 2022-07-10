@@ -20,7 +20,7 @@ var (
 )
 
 //ToElasticsearchFn indexes entity as elasticsearch document
-func ToElasticsearchFn(e elements.Element) {
+func ToElasticsearchFn(e elements.Element) *esapi.Response {
 	doc := e.ToByte()
 
 	h := sha256.New()
@@ -33,5 +33,7 @@ func ToElasticsearchFn(e elements.Element) {
 		Refresh:    "true",
 	}
 
-	req.Do(context.Background(), es)
+	resp, _ := req.Do(context.Background(), es)
+
+	return resp
 }

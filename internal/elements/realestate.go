@@ -5,67 +5,65 @@ import (
 	"strconv"
 )
 
-// TODO https://beam.apache.org/documentation/programming-guide/#schemas
-
 type RealEstate struct {
 	// 種類
-	Type string
+	Type string `beam:"type"`
 	// 地域
-	LandType string
+	LandType string `beam:"land_type"`
 	// 市区町村コード
-	CityId string
+	CityId string `beam:"city_id"`
 	// 都道府県名
-	PrefectureName string
+	PrefectureName string `beam:"prefecture_name"`
 	// 市区町村名
-	DistrictName string
+	DistrictName string `beam:"district_name"`
 	// 地区名
-	CityName string
+	CityName string `beam:"city_name"`
 	// 最寄駅：名称
-	ClosestStationName string
+	ClosestStationName string `beam:"closest_station__name"`
 	// 最寄駅：距離（分）
-	DurationToClosestStationInMin string
+	DurationToClosestStationInMin string `beam:"duration_to_closest_station_in_min"`
 	// 取引価格（総額）
-	ClosedPrice int
+	ClosedPrice int `beam:"closed_price"`
 	// 坪単価
-	UnitPriceOfFloorspace int
+	UnitPriceOfFloorspace int `beam:"unit_price_of_floorspace"`
 	// 間取り
-	FloorPlan string
+	FloorPlan string `beam:"floor_plan"`
 	// 面積（㎡）
-	AreaInSquareMeter int
+	AreaInSquareMeter int `beam:"area_in_square_meter"`
 	// 取引価格（㎡単価）
-	UnitPriceOfSquareMeter int
+	UnitPriceOfSquareMeter int `beam:"unit_price_of_square_meter"`
 	// 土地の形状
-	ShapeOfLand string
+	ShapeOfLand string `beam:"shape_of_land"`
 	// 間口
-	FacadeInMeters float64
+	FacadeInMeters float64 `beam:"facade_in_meters"`
 	// 延床面積（％）
-	AreaRatio int
+	AreaRatio int `beam:"area_ratio"`
 	// 建築年
-	YearBuilt string
+	YearBuilt string `beam:"year_build"`
 	// 建物の構造
-	ArchitectureType string
+	ArchitectureType string `beam:"architecture_type"`
 	// 用途
-	Purpose string
+	Purpose string `beam:"purpose"`
 	// 今後の利用目的
-	FuturePurpose string
+	FuturePurpose string `beam:"future_purpose"`
 	// 前面道路：方位
-	FrontRoadDirection string
+	FrontRoadDirection string `beam:"front_road_direction"`
 	// 前面道路：種類
-	FrontRoadType string
+	FrontRoadType string `beam:"front_road_type"`
 	// 前面道路：幅員（ｍ）
-	FrontRoadWithInMeters float64
+	FrontRoadWidthInMeters float64 `beam:"prefect"`
 	// 都市計画
-	CityPlan string
+	CityPlan string `beam:"city_plan"`
 	// 建ぺい率（％）
-	BuildingToLandRatio int
+	BuildingToLandRatio int `beam:"building_to_land_ratio"`
 	// 容積率（％）
-	FloorToLandRatio int
+	FloorToLandRatio int `beam:"floor_to_land_ratio"`
 	// 取引時点
-	AgreementDate string
+	AgreementPointOfTime string `beam:"agreement_point_of_time"`
 	// 改装
-	RefurbishmentState string
+	RefurbishmentState string `beam:"refurbishment_state"`
 	//取引の事情等
-	AgreementNote string
+	AgreementNote string `beam:"agreement_note"`
 }
 
 func New(m map[string]string) *RealEstate {
@@ -93,11 +91,11 @@ func New(m map[string]string) *RealEstate {
 	r.FuturePurpose = m["FuturePurpose"]
 	r.FrontRoadDirection = m["FrontRoadDirection"]
 	r.FrontRoadType = m["FrontRoadType"]
-	r.FrontRoadWithInMeters, _ = strconv.ParseFloat(m["FrontRoadWithInMeters"], 64)
+	r.FrontRoadWidthInMeters, _ = strconv.ParseFloat(m["FrontRoadWidthInMeters"], 64)
 	r.CityPlan = m["CityPlan"]
 	r.BuildingToLandRatio, _ = strconv.Atoi(m["BuildingToLandRatio"])
 	r.FloorToLandRatio, _ = strconv.Atoi(m["FloorToLandRatio"])
-	r.AgreementDate = m["AgreementDate"]
+	r.AgreementPointOfTime = m["AgreementPointOfTime"]
 	r.RefurbishmentState = m["RefurbishmentState"]
 	r.AgreementNote = m["AgreementNote"]
 
