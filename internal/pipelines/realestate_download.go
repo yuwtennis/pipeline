@@ -18,7 +18,10 @@ import (
 	"strings"
 )
 
-type RealEstate struct{}
+const (
+	PREFECTURE_CODE_TOKYO = "13"
+	CITY_CODE_ALL_CITY    = "13999"
+)
 
 var (
 	Keys = []string{
@@ -55,10 +58,11 @@ var (
 	}
 )
 
+type RealEstate struct{}
+
 func init() {
 	beam.RegisterFunction(ToTimestampFn)
 	beam.RegisterFunction(ToRealEstateFn)
-	beam.RegisterFunction(ToStringFn)
 	beam.RegisterFunction(beam2.ToElasticsearchFn)
 }
 
@@ -71,10 +75,6 @@ func ToRealEstateFn(event string) *elements.RealEstate {
 	record, _ := reader.ReadAll()
 
 	return elements.New(record[0])
-}
-
-func ToStringFn(e *elements.RealEstate) string {
-	return fmt.Sprintf("%#v", e)
 }
 
 func ToTimestampFn(e *elements.RealEstate) *elements.RealEstate {
@@ -93,10 +93,10 @@ func (re *RealEstate) Process() {
 	var decodedSlice []string
 
 	downloadedFile := "/tmp/file.zip"
-	from := "20204"
+	from := "20014"
 	to := "20214"
-	prefecture := "13"
-	city := "13999"
+	prefecture := PREFECTURE_CODE_TOKYO
+	city := CITY_CODE_ALL_CITY
 
 	requestUrl := fmt.Sprintf(
 		"https://www.land.mlit.go.jp/webland/servlet/DownloadServlet?DLF=true&TTC-From=%s&TTC-To=%s&TDK=%s&SKC=%s",
@@ -123,12 +123,10 @@ func (re *RealEstate) Process() {
 	for _, file := range read.File {
 		rawFile, err := file.Open()
 		helpers.Check(err)
-
 		scanner := bufio.NewScanner(rawFile)
 
 		for scanner.Scan() {
 			decodedString := string(helpers.ShiftJisToUTF8([]byte(scanner.Text())))
-
 			decodedSlice = append(decodedSlice, decodedString)
 		}
 	}
