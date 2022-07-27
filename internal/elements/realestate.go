@@ -40,6 +40,8 @@ type RealEstate struct {
 	AreaRatio int `beam:"area_ratio"`
 	// 建築年
 	YearBuilt string `beam:"year_build"`
+	// 築年数
+	YearsSinceBuilt int `beam:"years_since_built"`
 	// 建物の構造
 	ArchitectureType string `beam:"architecture_type"`
 	// 用途

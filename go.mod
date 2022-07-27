@@ -6,6 +6,7 @@ require (
 	github.com/apache/beam/sdks/v2 v2.39.0
 	github.com/elastic/go-elasticsearch/v8 v8.3.0
 	github.com/recursionpharma/go-csv-map v0.0.0-20160524001940-792523c65ae9
+	github.com/relvacode/iso8601 v1.1.0
 	github.com/stretchr/testify v1.7.0
 	golang.org/x/text v0.3.7
 )

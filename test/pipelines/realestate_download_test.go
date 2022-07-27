@@ -34,3 +34,17 @@ func TestToTimestampFn(t *testing.T) {
 	ptest.Run(pipeline)
 	passert.Equals(scope, result, expect)
 }
+
+func TestCalculateYearsSinceBuiltFn(t *testing.T) {
+	expect := elements.New(test.MapRealEstate)
+	expect.YearsSinceBuilt = 42
+
+	data := []*elements.RealEstate{
+		elements.New(test.MapRealEstate),
+	}
+	pipeline, scope, collection := ptest.CreateList(data)
+	result := beam.ParDo(scope, pipelines.CalcYearsSinceBuilt, collection)
+
+	ptest.Run(pipeline)
+	passert.Equals(scope, result, expect)
+}

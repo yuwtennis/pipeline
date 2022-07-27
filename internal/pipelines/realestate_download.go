@@ -9,6 +9,7 @@ import (
 	"github.com/apache/beam/sdks/v2/go/pkg/beam"
 	_ "github.com/apache/beam/sdks/v2/go/pkg/beam/io/filesystem/local"
 	"github.com/recursionpharma/go-csv-map"
+	"github.com/relvacode/iso8601"
 	"os"
 	"pipelines/internal/clients"
 	"pipelines/internal/elements"
@@ -16,6 +17,7 @@ import (
 	beam2 "pipelines/internal/helpers/beam"
 	"pipelines/internal/runners/direct"
 	"strings"
+	"time"
 )
 
 const (
@@ -63,6 +65,7 @@ type RealEstate struct{}
 func init() {
 	beam.RegisterFunction(ToTimestampFn)
 	beam.RegisterFunction(ToRealEstateFn)
+	beam.RegisterFunction(CalcYearsSinceBuilt)
 	beam.RegisterFunction(beam2.ToElasticsearchFn)
 }
 
@@ -85,6 +88,17 @@ func ToTimestampFn(e *elements.RealEstate) *elements.RealEstate {
 	if e.AgreementPointOfTime != "" {
 		e.AgreementPointOfTime = helpers.JpnQuarterToISO8601Str(e.AgreementPointOfTime)
 	}
+
+	return e
+}
+
+// TODO unittest
+func CalcYearsSinceBuilt(e *elements.RealEstate) *elements.RealEstate {
+	now := time.Now()
+	then, _ := iso8601.ParseString(e.YearBuilt)
+
+	// TODO Calculate more specifically
+	e.YearsSinceBuilt = now.Year() - then.Year()
 
 	return e
 }
@@ -144,6 +158,7 @@ func (re *RealEstate) Process() {
 	lines := beam.CreateList(d.Scope, decodedSlice)
 	entities := beam.ParDo(d.Scope, ToRealEstateFn, lines)
 	entities = beam.ParDo(d.Scope, ToTimestampFn, entities)
+	entities = beam.ParDo(d.Scope, CalcYearsSinceBuilt, entities)
 	beam.ParDo(d.Scope, beam2.ToElasticsearchFn, entities)
 	d.Execute(context.Background(), d.Pipeline)
 
