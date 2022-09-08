@@ -22,7 +22,7 @@ resource "google_compute_instance" "elastic" {
     subnetwork = google_compute_subnetwork.primary.name
   }
 
-  tags = ["elastic_fw"]
+  tags = ["elastic-fw"]
 }
 
 resource "google_compute_disk" "elastic_data" {

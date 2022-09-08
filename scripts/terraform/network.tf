@@ -15,7 +15,7 @@ resource "google_compute_subnetwork" "primary" {
 resource "google_compute_firewall" "elastic_fw" {
   name          = "elastic"
   network       = google_compute_network.dev.self_link
-  target_tags   = ["elastic_fw"]
+  target_tags   = ["elastic-fw"]
   source_ranges = ["0.0.0.0/0"]
 
   dynamic "allow" {
