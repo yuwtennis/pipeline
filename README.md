@@ -10,6 +10,7 @@
 * [Getting started](#getting-started)
 * [Conventions](#conventions)
   * [Commit message](#commit-message)
+* [Sample infrastructure]
 
 ## Motivation
 
@@ -47,3 +48,17 @@ docker run --rm pipelines:latest
 ### Commit message
 
 I follow [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/#summary).
+
+## Sample infrastructure
+
+There is a sample terraform script for you to build infrastructure on Google cloud.  
+You could use this when running on dataflow.
+
+```markdown
+cd scripts/terraform
+export TF_VAR_project=MY_PROJECT
+export TF_VAR_region=MY_REGION
+
+terraform plan
+terraform apply
+```
