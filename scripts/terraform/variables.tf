@@ -6,6 +6,10 @@ variable "ingress_allow" {
       protocol = "tcp",
       ports    = ["9200"]
     }
+    ssh = {
+      protocol = "tcp"
+      ports    = ["22"]
+    }
   }
 }
 

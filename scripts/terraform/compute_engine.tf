@@ -10,7 +10,7 @@ resource "google_compute_instance" "elastic" {
 
   boot_disk {
     initialize_params {
-      image = "debian-cloud/debian-11"
+      image = "ubuntu-os-cloud/ubuntu-minimal-2204-lts"
     }
   }
 
@@ -21,6 +21,8 @@ resource "google_compute_instance" "elastic" {
   network_interface {
     subnetwork = google_compute_subnetwork.primary.name
   }
+
+  metadata_startup_script = file("${path.module}/user-data")
 
   tags = ["elastic-fw"]
 }
