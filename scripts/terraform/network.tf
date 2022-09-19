@@ -38,7 +38,7 @@ resource "google_compute_firewall" "elastic_ingress_fw" {
   network       = google_compute_network.dev.self_link
   target_tags   = ["elastic-ingress-fw"]
   source_ranges = ["0.0.0.0/0"]
-  direction = "INGRESS"
+  direction     = "INGRESS"
 
   dynamic "allow" {
     for_each = var.ingress_allow
@@ -54,7 +54,7 @@ resource "google_compute_firewall" "elastic_egress_fw" {
   network       = google_compute_network.dev.self_link
   target_tags   = ["elastic-egress-fw"]
   source_ranges = ["0.0.0.0/0"]
-  direction = "EGRESS"
+  direction     = "EGRESS"
 
   dynamic "allow" {
     for_each = var.egress_allow

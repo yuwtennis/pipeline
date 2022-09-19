@@ -18,7 +18,7 @@ resource "google_compute_instance" "elastic" {
   }
 
   metadata = {
-    user-data = file("${path.module}/user-data")
+    user-data       = file("${path.module}/user-data")
     elastic-version = "8.4.1"
   }
 
