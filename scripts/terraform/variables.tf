@@ -13,6 +13,16 @@ variable "ingress_allow" {
   }
 }
 
+variable "egress_allow" {
+  type = map(any)
+  default = {
+    http = {
+      protocol = "tcp"
+      ports    = ["80", "443"]
+    }
+  }
+}
+
 variable "project" {
   type = string
 }
