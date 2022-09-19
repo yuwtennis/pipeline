@@ -6,6 +6,20 @@ variable "ingress_allow" {
       protocol = "tcp",
       ports    = ["9200"]
     }
+    ssh = {
+      protocol = "tcp"
+      ports    = ["22"]
+    }
+  }
+}
+
+variable "egress_allow" {
+  type = map(any)
+  default = {
+    http = {
+      protocol = "tcp"
+      ports    = ["80", "443"]
+    }
   }
 }
 

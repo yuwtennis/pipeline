@@ -3,14 +3,9 @@ resource "google_compute_instance" "elastic" {
   machine_type = "n2-standard-2"
   zone         = "asia-northeast1-a"
 
-  metadata = {
-    env = "dev"
-    app = "elastic"
-  }
-
   boot_disk {
     initialize_params {
-      image = "debian-cloud/debian-11"
+      image = "ubuntu-os-cloud/ubuntu-minimal-2204-lts"
     }
   }
 
@@ -22,7 +17,12 @@ resource "google_compute_instance" "elastic" {
     subnetwork = google_compute_subnetwork.primary.name
   }
 
-  tags = ["elastic-fw"]
+  metadata = {
+    user-data       = file("${path.module}/user-data")
+    elastic-version = "8.4.1"
+  }
+
+  tags = ["elastic-ingress-fw", "elastic-egress-fw"]
 }
 
 resource "google_compute_disk" "elastic_data" {
