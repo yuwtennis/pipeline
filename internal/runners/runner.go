@@ -1,10 +1,14 @@
-package direct
+package runners
 
 import (
 	"context"
 	"github.com/apache/beam/sdks/v2/go/pkg/beam"
 	"github.com/apache/beam/sdks/v2/go/pkg/beam/runners/direct"
 )
+
+type Runner interface {
+	Init()
+}
 
 type Direct struct {
 	// Pipeline
