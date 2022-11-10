@@ -24,6 +24,27 @@ I would like to introduce this as practical example.
 This pipeline targets mansion price in Japan which is downloaded from [MLIT](https://www.land.mlit.go.jp/webland/servlet/MainServlet).  
 Data will be indexed into elasticsearch.
 
+```markdown
+cd cmd/real_estates
+go run main.go
+```
+
+### Indexing to elasticsearch using cross language platform
+
+```markdown
+# Spin up expansion service
+export JOB_SERVER_PORT=20000
+python -m apache_beam.runners.portability.local_job_service_main -p $JOB_SERVER_PORT
+
+# In different shell, run pipeline
+cd cmd/xlang
+go run main.go \
+  --staging_location xxx \
+  --zone xxx \
+  --subnetwork xxx
+```
+
+
 ## Sample dashboard using kibana
 
 ### Real Estate

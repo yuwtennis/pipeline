@@ -1,5 +1,7 @@
 package pipelines
 
+import "pipelines/internal/runners"
+
 type Pipeline interface {
-	Process(elements string)
+	Process(runner runners.Runner)
 }

@@ -8,7 +8,7 @@ import (
 )
 
 type Runner interface {
-	Execute() (beam.PipelineResult, error)
+	Execute(ctx context.Context, pipeline *beam.Pipeline) (beam.PipelineResult, error)
 }
 
 type Direct struct{}
@@ -25,14 +25,14 @@ func Init() (pipeline *beam.Pipeline, scope beam.Scope) {
 }
 
 // Execute executes the Pipeline for Direct runner
-func (d *Direct) Execute(context context.Context, pipeline *beam.Pipeline) (result beam.PipelineResult, err error) {
+func (d Direct) Execute(context context.Context, pipeline *beam.Pipeline) (result beam.PipelineResult, err error) {
 	result, err = direct.Execute(context, pipeline)
 
 	return
 }
 
 // Execute executes the Pipeline for DataFlow runner
-func (d *DataFlow) Execute(context context.Context, pipeline *beam.Pipeline) (result beam.PipelineResult, err error) {
+func (d DataFlow) Execute(context context.Context, pipeline *beam.Pipeline) (result beam.PipelineResult, err error) {
 	result, err = dataflow.Execute(context, pipeline)
 
 	return
