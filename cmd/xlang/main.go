@@ -7,8 +7,8 @@ import (
 
 func main() {
 	p := pipelines.XLangElasticsearch{
-		ExpansionAddr: "localhost:20000",
-		EsNodeAddrs:   []string{"192.168.11.2:9200"},
+		ExpansionAddr: "localhost:12345",
+		EsNodeAddrs:   []string{"192.168.1.2:9200"},
 		IndexName:     "MyIndex",
 		MappingType:   "_doc",
 	}
