@@ -19,7 +19,7 @@ resource "google_compute_instance" "elastic" {
 
   metadata = {
     user-data       = file("${path.module}/user-data")
-    elastic-version = "8.4.1"
+    elastic-version = var.es_version
   }
 
   tags = ["elastic-ingress-fw", "elastic-egress-fw"]
