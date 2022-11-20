@@ -29,3 +29,8 @@ variable "project" {
 variable "region" {
   type = string
 }
+
+variable "es_version" {
+  type = string
+  default = "7.17.7"
+}

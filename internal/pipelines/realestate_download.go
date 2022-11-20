@@ -15,7 +15,7 @@ import (
 	"pipelines/internal/elements"
 	"pipelines/internal/helpers"
 	beam2 "pipelines/internal/helpers/beam"
-	"pipelines/internal/runners/direct"
+	"pipelines/internal/runners"
 	"strings"
 	"time"
 )
@@ -103,7 +103,7 @@ func CalcYearsSinceBuilt(e *elements.RealEstate) *elements.RealEstate {
 	return e
 }
 
-func (re *RealEstate) Process() {
+func (re RealEstate) Process(runner runners.Runner) {
 	var decodedSlice []string
 
 	downloadedFile := "/tmp/file.zip"
@@ -152,14 +152,14 @@ func (re *RealEstate) Process() {
 	decodedSlice = decodedSlice[1:]
 
 	fmt.Printf("len: [%d], cap: [%d] \n", len(decodedSlice), cap(decodedSlice))
-	d := direct.Direct{}
-	d.Init()
+	pipeline, scope := runners.Init()
 
-	lines := beam.CreateList(d.Scope, decodedSlice)
-	entities := beam.ParDo(d.Scope, ToRealEstateFn, lines)
-	entities = beam.ParDo(d.Scope, ToTimestampFn, entities)
-	entities = beam.ParDo(d.Scope, CalcYearsSinceBuilt, entities)
-	beam.ParDo(d.Scope, beam2.ToElasticsearchFn, entities)
-	d.Execute(context.Background(), d.Pipeline)
+	lines := beam.CreateList(scope, decodedSlice)
+	entities := beam.ParDo(scope, ToRealEstateFn, lines)
+	entities = beam.ParDo(scope, ToTimestampFn, entities)
+	entities = beam.ParDo(scope, CalcYearsSinceBuilt, entities)
+	beam.ParDo(scope, beam2.ToElasticsearchFn, entities)
 
+	_, err = runner.Execute(context.Background(), pipeline)
+	helpers.Check(err)
 }

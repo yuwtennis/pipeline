@@ -39,4 +39,4 @@ runcmd:
     docker pull docker.elastic.co/elasticsearch/elasticsearch:$ELASTIC_VERSION
     docker network create local
     docker volume create es-data
-    docker run -d --name elasticsearch --net local -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" -e "ELASTIC_PASSWORD=elastic" --mount source=es-data,target=/usr/share/elasticsearch/data elasticsearch:$ELASTIC_VERSION
+    docker run -d --name elasticsearch --net local -p 9200:9200 -p 9300:9300 -e ES_SETTING_BOOTSTRAP_MEMORY__LOCK=true -e ES_SETTING_DISCOVERY_TYPE=single-node -e ES_SETTING_XPACK_SECURITY_HTTP_SSL_ENABLED=false -e ELASTIC_PASSWORD=elastic --mount source=es-data,target=/usr/share/elasticsearch/data elasticsearch:$ELASTIC_VERSION
